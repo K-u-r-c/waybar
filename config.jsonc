@@ -1,0 +1,85 @@
+{
+    "layer": "overlay",
+    "exclusive": false,
+    "passthrough": false,
+    "position": "top",
+    "height": 32,
+    "output": ["DP-1"],
+
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+        "cpu",
+        "memory",
+        "temperature",
+        "pulseaudio",
+        "network",
+        "tray"
+    ],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "5": "5",
+            "urgent": "!",
+            "active": "●",
+            "default": "○"
+        }
+    },
+
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 60,
+        "separate-outputs": true
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "tooltip-format": "{:%A, %d.%m.%Y}"
+    },
+
+    "cpu": {
+        "format": "CPU {usage}%",
+        "interval": 2
+    },
+
+    "memory": {
+        "format": "RAM {}%",
+        "interval": 2
+    },
+
+    "temperature": {
+        "format": "TEMP {temperatureC}°C",
+        "critical-threshold": 85,
+        "interval": 3
+    },
+
+    "pulseaudio": {
+        "format": "VOL {volume}%",
+        "format-muted": "MUTE",
+        "scroll-step": 5,
+        "on-click": "pavucontrol"
+    },
+
+    "network": {
+        "format-wifi": "NET {essid} {signalStrength}%",
+        "format-ethernet": "NET wired",
+        "format-disconnected": "NET off",
+        "tooltip-format": "{ifname}: {ipaddr}"
+    },
+
+    "tray": {
+        "spacing": 8
+    }
+}
