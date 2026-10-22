@@ -1,3 +1,7 @@
+// ┌──────────────────────────────────────────────────────────────┐
+// │  waybar :: terminal / monochrome theme                   │
+// │  backup poprzedniej wersji: config.jsonc.pre-hacker.bak      │
+// └──────────────────────────────────────────────────────────────┘
 {
     "layer": "overlay",
     "exclusive": false,
@@ -7,8 +11,10 @@
     "output": ["DP-1"],
 
     "modules-left": [
+        "custom/prompt",
         "hyprland/workspaces",
-        "hyprland/window"
+        "hyprland/window",
+        "custom/cursor"
     ],
 
     "modules-center": [
@@ -16,70 +22,138 @@
     ],
 
     "modules-right": [
+        "mpris",
         "cpu",
         "memory",
         "temperature",
-        "pulseaudio",
         "network",
+        "pulseaudio",
+        "custom/wallpaper",
         "tray"
     ],
 
+    // ── LEFT ──────────────────────────────────────────────────────
+    "custom/prompt": {
+        "format": "<span color='#ffffff'><b>kurc@kurc-pc</b></span><span color='#5a5a5a'>:</span><span color='#a0a0a0'>~</span><span color='#d8d8d8'>$</span>",
+        "tooltip-format": "LPM: launcher (wofi) | PPM: nowy terminal",
+        "on-click": "wofi --show drun",
+        "on-click-right": "alacritty"
+    },
+
     "hyprland/workspaces": {
-        "format": "{icon}",
-        "format-icons": {
-            "1": "1",
-            "2": "2",
-            "3": "3",
-            "4": "4",
-            "5": "5",
-            "urgent": "!",
-            "active": "●",
-            "default": "○"
-        }
+        "format": "{name}",
+        "on-scroll-up": "hyprctl dispatch workspace e-1",
+        "on-scroll-down": "hyprctl dispatch workspace e+1"
     },
 
     "hyprland/window": {
-        "format": "{}",
+        "format": "<span color='#ffffff'>❯</span> {}",
         "max-length": 60,
         "separate-outputs": true
     },
 
-    "clock": {
-        "format": "{:%H:%M}",
-        "tooltip-format": "{:%A, %d.%m.%Y}"
+    "custom/cursor": {
+        "format": "█",
+        "tooltip": false
     },
 
+    // ── CENTER ────────────────────────────────────────────────────
+    "clock": {
+        "interval": 1,
+        "format": "<span color='#5a5a5a'>[</span> {:%H:%M:%S} <span color='#5a5a5a'>]</span>",
+        "format-alt": "<span color='#5a5a5a'>[</span> <span color='#ffffff'>{:%a %d.%m.%Y}</span> <span color='#5a5a5a'>::</span> {:%H:%M:%S} <span color='#5a5a5a'>]</span>",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "left",
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#ffffff'><b>{}</b></span>",
+                "weeks":    "<span color='#5a5a5a'>W{}</span>",
+                "weekdays": "<span color='#a0a0a0'><b>{}</b></span>",
+                "days":     "<span color='#a0a0a0'>{}</span>",
+                "today":    "<span background='#ffffff' color='#000000'><b>{}</b></span>"
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+
+    // ── RIGHT ─────────────────────────────────────────────────────
+    "mpris": {
+        "format": "<span color='#ffffff'>{status_icon}</span> {title}",
+        "format-paused": "<span color='#5a5a5a'>{status_icon} {title}</span>",
+        "status-icons": { "playing": "▶", "paused": "⏸", "stopped": "■" },
+        "max-length": 35,
+        "tooltip-format": "{player}: {artist} — {title}\nLPM: play/pause | scroll: następny/poprzedni",
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl previous",
+        "on-scroll-down": "playerctl next"
+    },
+
+    // 16 rdzeni jako sparkline
     "cpu": {
-        "format": "CPU {usage}%",
-        "interval": 2
+        "interval": 2,
+        "format": "<span color='#ffffff'>cpu</span> <span color='#a0a0a0'>{icon0}{icon1}{icon2}{icon3}{icon4}{icon5}{icon6}{icon7}{icon8}{icon9}{icon10}{icon11}{icon12}{icon13}{icon14}{icon15}</span> {usage:>2}%",
+        "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
+        "states": { "warning": 70, "critical": 90 },
+        "tooltip": true,
+        "on-click": "alacritty -e btop"
     },
 
     "memory": {
-        "format": "RAM {}%",
-        "interval": 2
+        "interval": 2,
+        "format": "<span color='#ffffff'>mem</span> {used:0.1f}<span color='#5a5a5a'>/</span>{total:0.0f}G",
+        "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)\nSWAP: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
+        "states": { "warning": 75, "critical": 90 },
+        "on-click": "alacritty -e btop"
     },
 
     "temperature": {
-        "format": "TEMP {temperatureC}°C",
+        "interval": 3,
+        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+        "input-filename": "temp1_input",
         "critical-threshold": 85,
-        "interval": 3
-    },
-
-    "pulseaudio": {
-        "format": "VOL {volume}%",
-        "format-muted": "MUTE",
-        "scroll-step": 5,
-        "on-click": "pavucontrol"
+        "format": "<span color='#ffffff'>tmp</span> {temperatureC}°C",
+        "format-critical": "<span color='#ffffff'>tmp</span> {temperatureC}°C !!",
+        "tooltip-format": "CPU package: {temperatureC}°C",
+        "on-click": "alacritty -e btop"
     },
 
     "network": {
-        "format-wifi": "NET {essid} {signalStrength}%",
-        "format-ethernet": "NET wired",
-        "format-disconnected": "NET off",
-        "tooltip-format": "{ifname}: {ipaddr}"
+        "interval": 2,
+        "format-wifi": "<span color='#ffffff'>net</span> <span color='#a0a0a0'>↓</span>{bandwidthDownBytes:>} <span color='#a0a0a0'>↑</span>{bandwidthUpBytes:>}",
+        "format-ethernet": "<span color='#ffffff'>eth</span> <span color='#a0a0a0'>↓</span>{bandwidthDownBytes:>} <span color='#a0a0a0'>↑</span>{bandwidthUpBytes:>}",
+        "format-disconnected": "<span color='#ffffff'>net offline</span>",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}\ngw: {gwaddr}\nLPM: nmtui",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}\ngw: {gwaddr}\nLPM: nmtui",
+        "on-click": "alacritty -e nmtui"
+    },
+
+    "pulseaudio": {
+        "scroll-step": 5,
+        "format": "<span color='#ffffff'>vol</span> <span color='#a0a0a0'>{icon}</span> {volume}%",
+        "format-muted": "<span color='#ffffff'>vol [ muted ]</span>",
+        "format-icons": {
+            "default": ["░░░░░", "█░░░░", "██░░░", "███░░", "████░", "█████"]
+        },
+        "tooltip-format": "{desc}\nLPM: mute | PPM: pavucontrol | scroll: głośność",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol"
+    },
+
+    "custom/wallpaper": {
+        "format": "<span color='#ffffff'>wall</span>",
+        "tooltip-format": "LPM: Wybierz tapetę | PPM: Następna tapeta",
+        "on-click": "~/.config/hypr/wallpaper.sh menu",
+        "on-click-right": "~/.config/hypr/wallpaper.sh next"
     },
 
     "tray": {
+        "icon-size": 15,
         "spacing": 8
     }
 }

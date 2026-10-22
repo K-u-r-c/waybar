@@ -1,54 +1,187 @@
+/* ┌────────────────────────────────────────────────────────────┐
+ * │  waybar :: terminal / monochrome theme                 │
+ * │  backup poprzedniej wersji: style.css.pre-hacker.bak       │
+ * └────────────────────────────────────────────────────────────┘ */
+
+@define-color bg        rgba(0, 0, 0, 0.95);
+@define-color fg        #d8d8d8;
+@define-color dim       #5a5a5a;
+@define-color line      #262626;
+@define-color green     #ffffff;
+@define-color green_dk  #1f1f1f;
+@define-color amber     #ffffff;
+@define-color red       #ffffff;
+
 * {
     border: none;
     border-radius: 0;
-    font-family: JetBrainsMono Nerd Font;
+    font-family: "MesloLGM Nerd Font", "MesloLGM Nerd Font Mono", monospace;
     font-size: 13px;
     min-height: 0;
 }
 
 window#waybar {
-    background: rgba(0, 0, 0, 0.9);
-    color: #d0d0d0;
+    background: @bg;
+    color: @fg;
+    border-bottom: 1px solid @line;
     transition: none;
 }
 
 window#waybar.hidden {
-  opacity: 0;
-  margin-top: -32px;
+    opacity: 0;
+    margin-top: -32px;
 }
 
-#workspaces button,
+tooltip {
+    background: rgba(0, 0, 0, 0.97);
+    border: 1px solid @green;
+}
+
+tooltip label {
+    color: @fg;
+    padding: 2px 4px;
+}
+
+/* ── wspólne ───────────────────────────────────────────────── */
+#custom-prompt,
 #window,
+#custom-cursor,
 #clock,
+#mpris,
 #cpu,
 #memory,
 #temperature,
-#pulseaudio,
 #network,
-#battery,
+#pulseaudio,
+#custom-wallpaper,
 #tray {
     background: transparent;
-    color: #d0d0d0;
+    color: @fg;
     padding: 0 10px;
     margin: 0;
 }
 
+/* separatory w stylu tmux między modułami po prawej */
+#mpris,
+#cpu,
+#memory,
+#temperature,
+#network,
+#pulseaudio,
+#custom-wallpaper,
+#tray {
+    border-left: 1px solid #1c1c1c;
+}
+
+/* hover = podświetlenie jak zaznaczenie w terminalu */
+#custom-prompt:hover,
+#clock:hover,
+#mpris:hover,
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#network:hover,
+#pulseaudio:hover,
+#custom-wallpaper:hover {
+    background: @green_dk;
+}
+
+/* ── prompt ────────────────────────────────────────────────── */
+#custom-prompt {
+    padding-left: 12px;
+    padding-right: 6px;
+}
+
+/* ── workspaces ────────────────────────────────────────────── */
+#workspaces {
+    margin: 0 4px;
+}
+
+#workspaces button {
+    background: transparent;
+    color: @dim;
+    padding: 0 7px;
+    margin: 5px 1px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
+}
+
+#workspaces button:hover {
+    background: @green_dk;
+    color: @green;
+}
+
 #workspaces button.active {
-    color: #ffffff;
+    background: @green;
+    color: #000000;
     font-weight: bold;
 }
 
 #workspaces button.urgent {
-    color: #ff5555;
+    background: #808080;
+    color: #000000;
+    font-weight: bold;
 }
 
+/* ── tytuł okna + mrugający kursor ─────────────────────────── */
+#window {
+    padding-right: 0;
+}
+
+#custom-cursor {
+    color: @green;
+    padding-left: 2px;
+    animation: blink 1.1s steps(1) infinite;
+}
+
+
+@keyframes blink {
+    0%   { opacity: 1; }
+    50%  { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* ── zegar ─────────────────────────────────────────────────── */
+#clock {
+    font-weight: bold;
+    color: @green;
+}
+
+/* ── stany ostrzegawcze ────────────────────────────────────── */
 #cpu.warning,
-#memory.warning,
-#temperature.critical,
-#battery.warning {
-    color: #ffcc66;
+#memory.warning {
+    color: @amber;
+    font-weight: bold;
 }
 
-#battery.critical {
-    color: #ff5555;
+#cpu.critical,
+#memory.critical,
+#temperature.critical {
+    color: @red;
+    animation: alert 0.8s steps(1) infinite;
+}
+
+@keyframes alert {
+    0%   { background: transparent; }
+    50%  { background: rgba(255, 255, 255, 0.18); }
+    100% { background: transparent; }
+}
+
+#network.disconnected,
+#pulseaudio.muted {
+    color: @red;
+}
+
+#mpris.paused {
+    color: @dim;
+}
+
+/* ── tray ──────────────────────────────────────────────────── */
+#tray {
+    padding-right: 12px;
+}
+
+#tray > .needs-attention {
+    background: #404040;
 }
