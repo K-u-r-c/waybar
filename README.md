@@ -1,6 +1,6 @@
 # waybar
 
-Czarno-biały, „terminalowy” pasek dla **Hyprlanda**. Po lewej prompt `user@host`, workspace'y i tytuł okna z mrugającym kursorem, na środku zegar, po prawej odtwarzacz, CPU, RAM, temperatura, sieć, dźwięk, przełącznik tapet i tray.
+Czarno-biały, „terminalowy” pasek dla **Hyprlanda**. Po lewej prompt `user@host`, workspace'y i tytuł okna zakończony kursorem `█`, na środku zegar, po prawej odtwarzacz, CPU, RAM, temperatura, sieć, dźwięk, przełącznik tapet i tray.
 
 - **auto-hide** (`autohide.sh`): pasek chowa się sam i wraca po najechaniu myszą na górną krawędź głównego monitora,
 - **tylko na głównym monitorze** (`launch.sh`): `$PRIMARY_MONITOR` albo największy, bez wpisanych na sztywno nazw.
