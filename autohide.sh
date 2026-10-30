@@ -1,43 +1,32 @@
 #!/usr/bin/env bash
-# Auto-hide waybar: pokazuje się tylko, gdy kursor dotknie górnej krawędzi.
-# SIGUSR1 to toggle, więc śledzimy PID waybara – po jego restarcie
-# stan jest resetowany (świeży waybar startuje jako widoczny).
 
 sleep 1
 
+# pasek jest na głównym monitorze – krawędź i zakres X liczymy względem niego, nie od y=0
+read -r mon_x mon_y mon_w < <("$HOME/.config/hypr/primary-monitor.sh" --json |
+  jq -r '[.x, .y, ((if .transform % 2 == 1 then .height else .width end) / .scale | floor)] | @tsv')
+mon_x=${mon_x:-0} mon_y=${mon_y:-0} mon_w=${mon_w:-99999}
+
 visible=true
-last_pid=""
 
 while true; do
-  pid=$(pgrep -xo waybar)
-
-  if [[ -z "$pid" ]]; then
-    last_pid=""
-    sleep 0.5
-    continue
-  fi
-
-  if [[ "$pid" != "$last_pid" ]]; then
-    # nowa instancja waybara -> jest widoczna
-    last_pid="$pid"
-    visible=true
-    sleep 0.3
-  fi
-
-  y=$(hyprctl cursorpos -j | jq -r '.y' 2>/dev/null)
+  read -r x y < <(hyprctl cursorpos -j 2>/dev/null | jq -r '"\(.x) \(.y)"')
 
   if [[ -z "$y" || "$y" == "null" ]]; then
     sleep 0.1
     continue
   fi
 
-  if ((y > 40)) && [[ "$visible" == true ]]; then
-    kill -SIGUSR1 "$pid"
+  on_mon=false
+  ((x >= mon_x && x < mon_x + mon_w)) && on_mon=true
+
+  if { [[ "$on_mon" == false ]] || ((y > mon_y + 40)); } && [[ "$visible" == true ]]; then
+    pkill -SIGUSR1 waybar
     visible=false
   fi
 
-  if ((y <= 3)) && [[ "$visible" == false ]]; then
-    kill -SIGUSR1 "$pid"
+  if [[ "$on_mon" == true ]] && ((y <= mon_y + 3)) && [[ "$visible" == false ]]; then
+    pkill -SIGUSR1 waybar
     visible=true
   fi
 

@@ -8,7 +8,8 @@
     "passthrough": false,
     "position": "top",
     "height": 32,
-    "output": ["DP-1"],
+    // "output" (główny monitor) generuje launch.sh
+    "include": ["~/.cache/waybar/output.jsonc"],
 
     "modules-left": [
         "custom/prompt",
@@ -34,7 +35,9 @@
 
     // ── LEFT ──────────────────────────────────────────────────────
     "custom/prompt": {
-        "format": "<span color='#ffffff'><b>kurc@kurc-pc</b></span><span color='#5a5a5a'>:</span><span color='#a0a0a0'>~</span><span color='#d8d8d8'>$</span>",
+        "exec": "echo \"$USER@$(uname -n)\"",
+        "interval": "once",
+        "format": "<span color='#ffffff'><b>{}</b></span><span color='#5a5a5a'>:</span><span color='#a0a0a0'>~</span><span color='#d8d8d8'>$</span>",
         "tooltip-format": "LPM: launcher (wofi) | PPM: nowy terminal",
         "on-click": "wofi --show drun",
         "on-click-right": "alacritty"
