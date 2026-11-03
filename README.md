@@ -1,8 +1,9 @@
 # waybar
 
-Czarno-biały, „terminalowy” pasek dla **Hyprlanda**. Po lewej prompt `user@host`, workspace'y i tytuł okna zakończony kursorem `█`, na środku zegar, po prawej odtwarzacz, CPU, RAM, temperatura, sieć, dźwięk, przełącznik tapet i tray.
+Czarno-biały, „terminalowy” pasek dla **Hyprlanda**. Po lewej pulpity z ikonami ich okien (jak pasek zadań w Windowsie, klik w ikonę = fokus na okno) i tytuł okna zakończony kursorem `█`, na środku zegar, po prawej odtwarzacz, dźwięk i tray.
 
 - **auto-hide** (`autohide.sh`): pasek chowa się sam i wraca po najechaniu myszą na górną krawędź głównego monitora,
+- **ikony gier** (`game-icons.py`, odpalany z `launch.sh`): gry ze Steama i Heroica mają klasy okien `steam_app_…`, więc dla ich ikon na pulpitach tworzy ukryte skróty `~/.local/share/applications/steam_app_<id>.desktop`,
 - **tylko na głównym monitorze** (`launch.sh`): `$PRIMARY_MONITOR` albo największy, bez wpisanych na sztywno nazw.
 
 > Część zestawu **[linux-tools](https://github.com/K-u-r-c/linux-tools)**.
@@ -10,7 +11,7 @@ Czarno-biały, „terminalowy” pasek dla **Hyprlanda**. Po lewej prompt `user@
 ## Instalacja
 
 ```bash
-sudo pacman -S --needed waybar jq ttf-meslo-nerd playerctl pavucontrol btop networkmanager wofi
+sudo pacman -S --needed waybar jq ttf-meslo-nerd playerctl pavucontrol
 
 [ -d ~/.config/waybar ] && mv ~/.config/waybar ~/.config/waybar.bak
 git clone https://github.com/K-u-r-c/waybar ~/.config/waybar
@@ -30,5 +31,3 @@ Aktualizacja: `git -C ~/.config/waybar pull && pkill waybar; ~/.config/waybar/la
 | Z czym | Po co | Bez tego |
 |---|---|---|
 | [hypr](https://github.com/K-u-r-c/hypr): `primary-monitor.sh` | wybór monitora dla paska i krawędzi auto-hide | pasek na wszystkich monitorach, auto-hide na całej szerokości |
-| [hypr](https://github.com/K-u-r-c/hypr): `wallpaper.sh` | przycisk tapet: lewy klik otwiera menu, prawy ustawia następną | przycisk nic nie robi |
-| [alacritty](https://github.com/K-u-r-c/alacritty) | kliknięcia: terminal, `btop`, `nmtui` | — |

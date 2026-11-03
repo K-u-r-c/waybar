@@ -9,4 +9,6 @@ if [[ -n "$primary" && "$primary" != null ]]; then
 else
     echo '{}' > "$HOME/.cache/waybar/output.jsonc"   # nie wiadomo który – pasek na wszystkich
 fi
+# ikony gier pod nazwą klasy okna (steam_app_…) dla ikon na pulpitach
+"$HOME/.config/waybar/game-icons.py" 2>/dev/null
 exec waybar

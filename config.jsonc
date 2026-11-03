@@ -12,7 +12,6 @@
     "include": ["~/.cache/waybar/output.jsonc"],
 
     "modules-left": [
-        "custom/prompt",
         "hyprland/workspaces",
         "hyprland/window",
         "custom/cursor"
@@ -24,27 +23,21 @@
 
     "modules-right": [
         "mpris",
-        "cpu",
-        "memory",
-        "temperature",
-        "network",
         "pulseaudio",
-        "custom/wallpaper",
         "tray"
     ],
 
     // ── LEFT ──────────────────────────────────────────────────────
-    "custom/prompt": {
-        "exec": "echo \"$USER@$(uname -n)\"",
-        "interval": "once",
-        "format": "<span color='#ffffff'><b>{}</b></span><span color='#5a5a5a'>:</span><span color='#a0a0a0'>~</span><span color='#d8d8d8'>$</span>",
-        "tooltip-format": "LPM: launcher (wofi) | PPM: nowy terminal",
-        "on-click": "wofi --show drun",
-        "on-click-right": "alacritty"
-    },
-
+    // numer pulpitu + ikony jego okien (jak pasek zadań w Windowsie); klik w ikonę = fokus na to okno
     "hyprland/workspaces": {
-        "format": "{name}",
+        "format": "{name} {windows}",
+        "workspace-taskbar": {
+            "enable": true,
+            "format": "{icon}",
+            "icon-size": 15,
+            "on-click-window": "hyprctl dispatch focuswindow address:{address}",
+            "ignore-list": ["^screensaver$"]
+        },
         "on-scroll-up": "hyprctl dispatch workspace e-1",
         "on-scroll-down": "hyprctl dispatch workspace e+1"
     },
@@ -97,45 +90,6 @@
         "on-scroll-down": "playerctl next"
     },
 
-    // 16 rdzeni jako sparkline
-    "cpu": {
-        "interval": 2,
-        "format": "<span color='#ffffff'>cpu</span> <span color='#a0a0a0'>{icon0}{icon1}{icon2}{icon3}{icon4}{icon5}{icon6}{icon7}{icon8}{icon9}{icon10}{icon11}{icon12}{icon13}{icon14}{icon15}</span> {usage:>2}%",
-        "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"],
-        "states": { "warning": 70, "critical": 90 },
-        "tooltip": true,
-        "on-click": "alacritty -e btop"
-    },
-
-    "memory": {
-        "interval": 2,
-        "format": "<span color='#ffffff'>mem</span> {used:0.1f}<span color='#5a5a5a'>/</span>{total:0.0f}G",
-        "tooltip-format": "RAM: {used:0.1f}G / {total:0.1f}G ({percentage}%)\nSWAP: {swapUsed:0.1f}G / {swapTotal:0.1f}G",
-        "states": { "warning": 75, "critical": 90 },
-        "on-click": "alacritty -e btop"
-    },
-
-    "temperature": {
-        "interval": 3,
-        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
-        "input-filename": "temp1_input",
-        "critical-threshold": 85,
-        "format": "<span color='#ffffff'>tmp</span> {temperatureC}°C",
-        "format-critical": "<span color='#ffffff'>tmp</span> {temperatureC}°C !!",
-        "tooltip-format": "CPU package: {temperatureC}°C",
-        "on-click": "alacritty -e btop"
-    },
-
-    "network": {
-        "interval": 2,
-        "format-wifi": "<span color='#ffffff'>net</span> <span color='#a0a0a0'>↓</span>{bandwidthDownBytes:>} <span color='#a0a0a0'>↑</span>{bandwidthUpBytes:>}",
-        "format-ethernet": "<span color='#ffffff'>eth</span> <span color='#a0a0a0'>↓</span>{bandwidthDownBytes:>} <span color='#a0a0a0'>↑</span>{bandwidthUpBytes:>}",
-        "format-disconnected": "<span color='#ffffff'>net offline</span>",
-        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ifname}: {ipaddr}/{cidr}\ngw: {gwaddr}\nLPM: nmtui",
-        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}\ngw: {gwaddr}\nLPM: nmtui",
-        "on-click": "alacritty -e nmtui"
-    },
-
     "pulseaudio": {
         "scroll-step": 5,
         "format": "<span color='#ffffff'>vol</span> <span color='#a0a0a0'>{icon}</span> {volume}%",
@@ -146,13 +100,6 @@
         "tooltip-format": "{desc}\nLPM: mute | PPM: pavucontrol | scroll: głośność",
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
         "on-click-right": "pavucontrol"
-    },
-
-    "custom/wallpaper": {
-        "format": "<span color='#ffffff'>wall</span>",
-        "tooltip-format": "LPM: Wybierz tapetę | PPM: Następna tapeta",
-        "on-click": "~/.config/hypr/wallpaper.sh menu",
-        "on-click-right": "~/.config/hypr/wallpaper.sh next"
     },
 
     "tray": {
