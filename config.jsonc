@@ -35,11 +35,11 @@
             "enable": true,
             "format": "{icon}",
             "icon-size": 15,
-            "on-click-window": "hyprctl dispatch focuswindow address:{address}",
+            "on-click-window": "~/.config/hypr/dispatch.sh 'hl.dsp.focus({ window = \"address:{address}\" })' focuswindow address:{address}",
             "ignore-list": ["^screensaver$"]
         },
-        "on-scroll-up": "hyprctl dispatch workspace e-1",
-        "on-scroll-down": "hyprctl dispatch workspace e+1"
+        "on-scroll-up": "~/.config/hypr/dispatch.sh 'hl.dsp.focus({ workspace = \"e-1\" })' workspace e-1",
+        "on-scroll-down": "~/.config/hypr/dispatch.sh 'hl.dsp.focus({ workspace = \"e+1\" })' workspace e+1"
     },
 
     "hyprland/window": {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Waybar tylko na głównym monitorze (hypr/monitors.conf -> PRIMARY_MONITOR, domyślnie największy).
+# Waybar tylko na głównym monitorze (hypr/monitors.lua -> PRIMARY_MONITOR, domyślnie największy).
 # config.jsonc dociąga "output" z pliku generowanego tutaj.
 
 mkdir -p "$HOME/.cache/waybar"
